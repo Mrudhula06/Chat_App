@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
+
 import { connectDb } from "./lib/db.js";
 import authRoutes from "./routes/authRoute.js";
 import messageRoutes from "./routes/messageRoute.js";
@@ -17,18 +18,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://chat-app-2zvv.onrender.com"],
+    origin: "http://localhost:5173", // you may want to add your Render frontend URL here
     credentials: true,
   })
 );
 
-// API routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  console.log("Production mode");
   app.use(express.static(path.join(__dirname, "frontend/dist")));
 
   app.get("*", (req, res) => {
@@ -37,6 +37,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 server.listen(PORT, () => {
-  console.log("Server is running on PORT:", PORT);
+  console.log("server is running on PORT:" + PORT);
   connectDb();
 });
